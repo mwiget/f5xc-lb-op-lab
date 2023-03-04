@@ -1,0 +1,30 @@
+#cloud-config 
+chpasswd: #Change your local password here
+    list: |
+      ubuntu:Volterra123
+    expire: false
+users:
+  - default
+system_info: 
+  default_user:
+    name: ubuntu
+    lock_passwd: false
+    ssh-authorized-keys:
+      - ${ssh_public_key}
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+disable_root: false
+ssh_pwauth: yes #Use pwd to access (otherwise follow official doc to use ssh-keys)
+random_seed:
+    file: /dev/urandom
+    command: ["pollinate", "-r", "-s", "https://entropy.ubuntu.com"]
+    command_required: true
+package_upgrade: true
+packages:
+  - python3-pip #Dependency package for cur
+  - bwm-ng
+runcmd:
+   - echo curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sh - #Install cloud-init
+   - echo "gugus" >> /etc/gugus
+power_state:
+  timeout: 30
+  mode: reboot
