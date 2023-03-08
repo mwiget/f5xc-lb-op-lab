@@ -6,7 +6,8 @@ module "vsphere1" {
   f5xc_api_token        = var.f5xc_api_token
   f5xc_api_ca_cert      = var.f5xc_api_ca_cert
   f5xc_reg_url          = var.f5xc_reg_url
-  f5xc_ova_image        = var.f5xc_ova_image
+  #  f5xc_ova_image        = var.f5xc_ova_image
+  f5xc_vm_template      = var.f5xc_vm_template
   vsphere_user          = var.vsphere_user
   vsphere_password      = var.vsphere_password
   vsphere_server        = var.vsphere_server
@@ -17,16 +18,16 @@ module "vsphere1" {
     "site-mesh" = var.project_prefix
   }
   nodes   = [
-    { name = "master-0", host = "192.168.41.52", datastore = "datastore1", ipaddress = "192.168.41.161/24" }
+    { name = "master-0", host = "192.168.40.100", datastore = "datastore3", ipaddress = "192.168.40.171/24" }
   ]
   outside_network       = "VM Network"
   dnsservers            = {
     primary = "8.8.8.8"
     secondary = "4.4.4.4"
   }
-  publicdefaultgateway  = "192.168.41.1"
+  publicdefaultgateway  = "192.168.40.1"
   publicdefaultroute    = "0.0.0.0/0"
-  guest_type            = "other3xLinux64Guest"
+  guest_type            = "centos64Guest"
   cpus                  = 4
   memory                = 14336
   certifiedhardware     = "vmware-voltmesh"
@@ -43,7 +44,8 @@ module "vsphere2" {
   f5xc_api_token        = var.f5xc_api_token
   f5xc_api_ca_cert      = var.f5xc_api_ca_cert
   f5xc_reg_url          = var.f5xc_reg_url
-  f5xc_ova_image        = var.f5xc_ova_image
+  #f5xc_ova_image        = var.f5xc_ova_image
+  f5xc_vm_template      = var.f5xc_vm_template
   vsphere_user          = var.vsphere_user
   vsphere_password      = var.vsphere_password
   vsphere_server        = var.vsphere_server
@@ -54,16 +56,16 @@ module "vsphere2" {
     "site-mesh" = var.project_prefix
   }
   nodes   = [
-    { name = "master-0", host = "192.168.41.52", datastore = "datastore1", ipaddress = "192.168.41.162/24" }
+    { name = "master-0", host = "192.168.40.100", datastore = "datastore3", ipaddress = "192.168.40.172/24" }
   ]
   outside_network       = "VM Network"
   dnsservers            = {
     primary = "8.8.8.8"
     secondary = "4.4.4.4"
   }
-  publicdefaultgateway  = "192.168.41.1"
+  publicdefaultgateway  = "192.168.40.1"
   publicdefaultroute    = "0.0.0.0/0"
-  guest_type            = "other3xLinux64Guest"
+  guest_type            = "centos64Guest"
   cpus                  = 4
   memory                = 14336
   certifiedhardware     = "vmware-voltmesh"
@@ -72,6 +74,9 @@ module "vsphere2" {
   sitelongitude         = "4.8"
 }
 
+output "vsphere1" {
+  value = module.vsphere1
+}
 output "vsphere2" {
   value = module.vsphere2
 }

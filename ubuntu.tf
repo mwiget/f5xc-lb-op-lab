@@ -30,12 +30,12 @@ locals {
 }
 
 # see https://www.terraform.io/docs/providers/vsphere/r/virtual_machine.html
-resource "vsphere_virtual_machine" "example" {
+resource "vsphere_virtual_machine" "ubuntu" {
   name = "${var.project_prefix}-ubuntu"
   guest_id = data.vsphere_virtual_machine.ubuntu_template.guest_id
   firmware = data.vsphere_virtual_machine.ubuntu_template.firmware
   num_cpus = 1
-  num_cores_per_socket = 2
+  num_cores_per_socket = 1
   memory = 2048
   nested_hv_enabled = true
   vvtd_enabled = true
@@ -74,6 +74,7 @@ resource "vsphere_virtual_machine" "example" {
   lifecycle {
     ignore_changes = [
       annotation,
+      vapp[0].properties,
       clone[0].template_uuid,
       clone[0].customize[0].dns_server_list,
       clone[0].customize[0].network_interface[0]
@@ -81,6 +82,6 @@ resource "vsphere_virtual_machine" "example" {
   }
 }
 
-output "ips" {
-  value = vsphere_virtual_machine.example.*.default_ip_address
+output "vm" {
+  value = vsphere_virtual_machine.ubuntu
 }

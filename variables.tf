@@ -61,6 +61,7 @@ variable "vsphere_cluster" {
 }
 variable "f5xc_ova_image" {
   type = string
+  default = ""
 }
 variable "admin_password" {
   type = string
@@ -68,6 +69,11 @@ variable "admin_password" {
 }
 variable "vsphere_ubuntu_template" {
   type = string
+  default = ""
+}
+variable "f5xc_vm_template" {
+  type = string
+  default = ""
 }
 variable "ssh_public_key" {
   type = string

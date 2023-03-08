@@ -20,11 +20,35 @@ random_seed:
     command_required: true
 package_upgrade: true
 packages:
-  - python3-pip #Dependency package for cur
+  - python3-pip #Dependency package for curl
   - bwm-ng
+  - wrk
+  - btop
+  - nginx
+  - docker.io
 runcmd:
-   - echo curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sh - #Install cloud-init
-   - echo "gugus" >> /etc/gugus
-power_state:
-  timeout: 30
-  mode: reboot
+  - echo curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sh -
+  - ip route add 10.10.10.0/24 via 192.168.40.171  # route custom vip prefix to vsphere1
+  - ip route add 10.10.11.0/24 via 192.168.40.172  # route custom vip prefix to vsphere2
+  - dd if=/dev/random bs=1k count=1 of=/var/www/html/1k 
+  - dd if=/dev/random bs=1k count=100 of=/var/www/html/100k 
+  - dd if=/dev/random bs=1k count=1024 of=/var/www/html/1m
+write_files:
+  - path: /home/ubuntu/add-routes.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      sudo ip route add 10.10.10.0/24 via 192.168.40.171
+      sudo ip route add 10.10.11.0/24 via 192.168.40.172
+  - path: /home/ubuntu/test.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      while true; do
+      #wrk -c 5 -t 2 -H Host:site2.local http://10.10.11.10
+        echo -n "`date`  "
+        curl -sH Host:site2.local -w 'Total: %%{time_total}s\n' --output /dev/null http://10.10.11.10/1m
+        #curl -sH Host:site2.local -w 'Total: %%{time_total}s\n' --output /dev/null http://10.10.11.10/1k
+        #curl -vsH Host:site2.local --output /dev/null http://10.10.11.10/100k
+        sleep 0.5
+      done
