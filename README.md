@@ -23,5 +23,8 @@
         +-----------------+
 ```
 
-https://github.com/sh0rez/vSphere-terraform_ubuntu-cloud-ova/blob/master/post/README.md
+## Caveat
+
+terraform needs to be applied twice, because the dynamic ip address of the ubuntu vm is used as input into
+the loadbalancer manifest. 
 
