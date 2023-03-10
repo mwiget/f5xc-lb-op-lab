@@ -22,6 +22,7 @@ package_upgrade: true
 packages:
   - python3-pip #Dependency package for curl
   - bwm-ng
+  - net-tools
   - wrk
   - btop
   - nginx
@@ -47,8 +48,8 @@ write_files:
       while true; do
       #wrk -c 5 -t 2 -H Host:site2.local http://10.10.11.10
         echo -n "`date`  "
-        curl -sH Host:site2.local -w 'Total: %%{time_total}s\n' --output /dev/null http://10.10.11.10/1m
-        #curl -sH Host:site2.local -w 'Total: %%{time_total}s\n' --output /dev/null http://10.10.11.10/1k
+        curl -m 10 -sH Host:site2.local -w 'Total: %%{time_total}s %%{errormsg}\n' --output /dev/null http://10.10.11.10/1m
+        #curl -sH Host:site2.local -w 'Total: %%{time_total}s %%{errormsg}\n' --output /dev/null http://10.10.11.10/1k
         #curl -vsH Host:site2.local --output /dev/null http://10.10.11.10/100k
         sleep 0.5
       done
